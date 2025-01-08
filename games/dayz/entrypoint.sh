@@ -172,7 +172,7 @@ else
 fi
 # If the mod list file exists and is valid, parse and add mods to the client-side mods list
 if [[ -f ${MOD_FILE} ]] && [[ -n "$(cat ${MOD_FILE} | grep 'Created by DayZ Launcher')" ]]; then
-    CLIENT_MODS+=$(cat ${MOD_FILE} | grep 'id=' | cut -d'=' -f3 | cut -d'"' -f1 | xargs printf '@%s;')
+    CLIENT_MODS+=$(cat ${MOD_FILE} | grep 'id=' | cut -d'=' -f3 | cut -d'"' -f1 | xargs printf '%s;')
 elif [[ -n "${MOD_FILE}" ]]; then # If MOD_FILE is not null, warn user file is missing or invalid
     echo -e "\n${YELLOW}[STARTUP_WARN]: DayZ Modlist file \"${CYAN}${MOD_FILE}${YELLOW}\" could not be found, or is invalid!${NC}"
     echo -e "\tEnsure your uploaded modlist's file name matches your Startup Parameter."
@@ -227,19 +227,19 @@ if [[ ${UPDATE_SERVER} == 1 ]]; then
                 # Get mod's latest update in epoch time from its Steam Workshop changelog page
                 latestUpdate=$(curl -sL https://steamcommunity.com/sharedfiles/filedetails/changelog/$modID | grep '<p id=' | head -1 | cut -d'"' -f2)
                 # If the update time is valid and newer than the local directory's creation date, or the mod hasn't been downloaded yet, download the mod
-                if [[ ! -d @$modID ]] || [[ ( -n $latestUpdate ) && ( $latestUpdate =~ ^[0-9]+$ ) && ( $latestUpdate > $(find @$modID | head -1 | xargs stat -c%Y) ) ]]; then
+                if [[ ! -d $modID ]] || [[ ( -n $latestUpdate ) && ( $latestUpdate =~ ^[0-9]+$ ) && ( $latestUpdate > $(find $modID | head -1 | xargs stat -c%Y) ) ]]; then
                     # Get the mod's name from the Workshop page as well
                     modName=$(curl -sL https://steamcommunity.com/sharedfiles/filedetails/changelog/$modID | grep 'workshopItemTitle' | cut -d'>' -f2 | cut -d'<' -f1)
                     if [[ -z $modName ]]; then # Set default name if unavailable
                         modName="[NAME UNAVAILABLE]"
                     fi
-                    if [[ ! -d @$modID ]]; then
+                    if [[ ! -d $modID ]]; then
                         echo -e "\n${GREEN}[UPDATE]:${NC} Downloading new Mod: \"${CYAN}${modName}${NC}\" (${CYAN}${modID}${NC})"
                     else
                         echo -e "\n${GREEN}[UPDATE]:${NC} Mod update found for: \"${CYAN}${modName}${NC}\" (${CYAN}${modID}${NC})"
                     fi
                     if [[ -n $latestUpdate ]] && [[ $latestUpdate =~ ^[0-9]+$ ]]; then # Notify last update date, if valid
-                        echo -e "\tMod was last updated: ${CYAN}$(date -d @${latestUpdate})${NC}"
+                        echo -e "\tMod was last updated: ${CYAN}$(date -d ${latestUpdate})${NC}"
                     fi
                     
                     # Delete SteamCMD appworkshop cache before running to avoid mod download failures
