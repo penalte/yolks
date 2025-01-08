@@ -105,15 +105,15 @@ function RunSteamCMD { #[Input: int server=0 mod=1; int id]
                 echo -e "\n${GREEN}[UPDATE]: Game server is up to date!${NC}"
             else # Mod
                 # Move the downloaded mod to the root directory, and replace existing mod if needed
-                mkdir -p ./@$2
-                rm -rf ./@$2/*
-                mv -f ${WORKSHOP_DIR}/content/$GAME_ID/$2/* ./@$2
+                mkdir -p ./$2
+                rm -rf ./$2/*
+                mv -f ${WORKSHOP_DIR}/content/$GAME_ID/$2/* ./$2
                 rm -d ${WORKSHOP_DIR}/content/$GAME_ID/$2
                 # Make the mods contents all lowercase
-                ModsLowercase @$2
+                ModsLowercase $2
                 # Move any .bikey's to the keys directory
                 echo -e "\tMoving any mod ${CYAN}.bikey${NC} files to the ${CYAN}~/keys/${NC} folder..."
-                find ./@$2 -name "*.bikey" -type f -exec cp {} ./keys \;
+                find ./$2 -name "*.bikey" -type f -exec cp {} ./keys \;
                 echo -e "${GREEN}[UPDATE]: Mod download/update successful!${NC}"
             fi
             break
